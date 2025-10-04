@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holo_task/features/cart/domain/usecases/get_cart.dart';
+import 'package:holo_task/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:holo_task/routes/app_routes.dart';
 import 'package:holo_task/di/injection_container.dart';
 import 'package:holo_task/core/design_system/app_theme.dart';
@@ -14,11 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Holo Task',
-      theme: AppTheme.lightTheme,
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppRoutes.router,
+    return BlocProvider(
+      create: (context) => sl<CartBloc>()..add(CartRequested()),
+      child: MaterialApp.router(
+        title: 'Holo Task',
+        theme: AppTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        routerConfig: AppRoutes.router,
+      ),
     );
   }
 }

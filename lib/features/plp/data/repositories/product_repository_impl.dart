@@ -26,11 +26,6 @@ class ProductRepositoryImpl implements ProductRepository {
       await local.cacheProducts(products);
       return products;
     } catch (e) {
-      // If remote fails, try to get from cache
-      final cachedProducts = await local.getCachedProducts();
-      if (cachedProducts.isNotEmpty) {
-        return cachedProducts;
-      }
       // If no cache available, rethrow the error
       rethrow;
     }

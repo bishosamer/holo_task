@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:holo_task/core/design_system/app_colors.dart';
 import 'package:holo_task/core/design_system/app_spacing.dart';
 import 'package:holo_task/features/pdp/presentation/bloc/pdp_bloc.dart';
+import 'package:holo_task/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:holo_task/routes/app_routes.dart';
 import 'package:holo_task/di/injection_container.dart';
 
 class PdpArgs {
@@ -16,8 +19,13 @@ class PdpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PdpBloc>(
-      create: (context) => sl<PdpBloc>()..add(PdpRequested(id: args.productId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PdpBloc>(
+          create: (context) =>
+              sl<PdpBloc>()..add(PdpRequested(id: args.productId)),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(title: const Text('Product Details')),
         body: BlocBuilder<PdpBloc, PdpState>(
@@ -26,7 +34,7 @@ class PdpPage extends StatelessWidget {
               PdpInitial() => const Center(child: CircularProgressIndicator()),
               PdpLoading() => const Center(child: CircularProgressIndicator()),
               PdpSuccess(product: final product) => SingleChildScrollView(
-                  padding: EdgeInsets.all(AppSpacing.lg),
+                  padding: const EdgeInsets.all(AppSpacing.lg),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -42,22 +50,25 @@ class PdpPage extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius:
                               BorderRadius.circular(AppSpacing.radiusLg),
-                          child: Image.network(
-                            product.image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                              color: AppColors.grey200,
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: AppColors.grey400,
-                                size: AppSpacing.iconXxl,
+                          child: Hero(
+                            tag: product.id.toString(),
+                            child: Image.network(
+                              product.image,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                color: AppColors.grey200,
+                                child: const Icon(
+                                  Icons.image_not_supported,
+                                  color: AppColors.grey400,
+                                  size: AppSpacing.iconXxl,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: AppSpacing.xl),
                       // Product Title
                       Text(
                         product.title,
@@ -66,10 +77,10 @@ class PdpPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                       ),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
                       // Product Category
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: AppSpacing.md,
                           vertical: AppSpacing.xs,
                         ),
@@ -87,7 +98,7 @@ class PdpPage extends StatelessWidget {
                                   ),
                         ),
                       ),
-                      SizedBox(height: AppSpacing.lg),
+                      const SizedBox(height: AppSpacing.lg),
                       // Product Price
                       Text(
                         '\$${product.price.toStringAsFixed(2)}',
@@ -99,7 +110,7 @@ class PdpPage extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                       ),
-                      SizedBox(height: AppSpacing.lg),
+                      const SizedBox(height: AppSpacing.lg),
                       // Product Description
                       Text(
                         'Description',
@@ -107,24 +118,45 @@ class PdpPage extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                       ),
-                      SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.sm),
                       Text(
                         product.description,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               height: 1.6,
                             ),
                       ),
-                      SizedBox(height: AppSpacing.xxxl),
+                      const SizedBox(height: AppSpacing.xxxl),
                       // Add to Cart Button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // TODO: Implement add to cart
+                            final pdpBloc = context.read<PdpBloc>();
+                            final cartBloc = sl<CartBloc>();
+
+                            if (pdpBloc.state is PdpSuccess) {
+                              final product =
+                                  (pdpBloc.state as PdpSuccess).product;
+                              cartBloc
+                                  .add(AddToCartRequested(product: product));
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('${product.title} added to cart'),
+                                  action: SnackBarAction(
+                                    label: 'View Cart',
+                                    onPressed: () {
+                                      context.push(AppRoutes.cart);
+                                    },
+                                  ),
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
-                            padding:
-                                EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.lg),
                           ),
                           child: Text(
                             'Add to Cart',
@@ -137,22 +169,22 @@ class PdpPage extends StatelessWidget {
                 ),
               PdpFailure(message: final message) => Center(
                   child: Padding(
-                    padding: EdgeInsets.all(AppSpacing.lg),
+                    padding: const EdgeInsets.all(AppSpacing.lg),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.error_outline,
                           size: AppSpacing.iconXxl,
                           color: AppColors.error,
                         ),
-                        SizedBox(height: AppSpacing.lg),
+                        const SizedBox(height: AppSpacing.lg),
                         Text(
                           message,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        SizedBox(height: AppSpacing.lg),
+                        const SizedBox(height: AppSpacing.lg),
                         ElevatedButton(
                           onPressed: () {
                             context

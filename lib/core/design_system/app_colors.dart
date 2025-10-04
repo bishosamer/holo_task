@@ -51,4 +51,7 @@ class AppColors {
   // Shimmer Colors
   static const Color shimmerBase = Color(0xFFE0E0E0);
   static const Color shimmerHighlight = Color(0xFFF5F5F5);
+
+  // Shadow Colors
+  static const Color shadow = Color(0x1A000000);
 }
