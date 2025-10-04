@@ -15,7 +15,12 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<Product>> getProducts() async {
     try {
-      // Try to get from remote first
+      //get from cache first
+      final cachedProducts = await local.getCachedProducts();
+      if (cachedProducts.isNotEmpty) {
+        return cachedProducts;
+      }
+
       final products = await remote.getProducts();
       // Cache the products
       await local.cacheProducts(products);

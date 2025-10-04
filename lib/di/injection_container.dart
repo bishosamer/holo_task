@@ -9,7 +9,9 @@ import 'package:holo_task/features/plp/data/models/product_model.dart';
 import 'package:holo_task/features/plp/data/repositories/product_repository_impl.dart';
 import 'package:holo_task/features/plp/domain/repositories/product_repository.dart';
 import 'package:holo_task/features/plp/domain/usecases/get_products.dart';
+import 'package:holo_task/features/plp/domain/usecases/get_product.dart';
 import 'package:holo_task/features/plp/presentation/bloc/plp_bloc.dart';
+import 'package:holo_task/features/pdp/presentation/bloc/pdp_bloc.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -25,7 +27,7 @@ Future<void> initDependencies() async {
 
   // External dependencies
   sl.registerLazySingleton<Dio>(() => Dio(BaseOptions(
-        baseUrl: 'https://fakestoreapi.com', // Using fakestoreapi for demo
+        baseUrl: 'https://fakestoreapi.com',
         connectTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 3),
       )));
@@ -44,7 +46,9 @@ Future<void> initDependencies() async {
 
   // Use cases
   sl.registerFactory<GetProducts>(() => GetProducts(sl()));
+  sl.registerFactory<GetProduct>(() => GetProduct(sl()));
 
   // Blocs
   sl.registerFactory<PlpBloc>(() => PlpBloc(getProducts: sl()));
+  sl.registerFactory<PdpBloc>(() => PdpBloc(getProduct: sl()));
 }
