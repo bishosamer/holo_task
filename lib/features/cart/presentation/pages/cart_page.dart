@@ -96,7 +96,13 @@ class CartPage extends StatelessWidget {
                                 ),
                                 child: Text(
                                   'Proceed to Checkout',
-                                  style: Theme.of(context).textTheme.labelLarge,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .copyWith(
+                                        color: AppColors.textOnPrimary,
+                                        //    fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                               ),
                             ),

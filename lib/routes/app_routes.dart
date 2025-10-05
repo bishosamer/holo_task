@@ -5,7 +5,6 @@ import 'package:holo_task/features/cart/domain/usecases/get_cart.dart';
 import 'package:holo_task/features/cart/presentation/bloc/cart_bloc.dart';
 
 import 'package:holo_task/features/main/presentation/pages/main_page.dart';
-import 'package:holo_task/features/profile/presentation/pages/profile_page.dart';
 import 'package:holo_task/features/plp/presentation/pages/plp_page.dart';
 import 'package:holo_task/features/pdp/presentation/pages/pdp_page.dart';
 import 'package:holo_task/features/cart/presentation/pages/cart_page.dart';
@@ -33,8 +32,8 @@ class AppRoutes {
             ),
           ),
           GoRoute(
-            path: profile,
-            builder: (context, state) => const ProfilePage(),
+            path: cart,
+            builder: (context, state) => const CartPage(),
           ),
         ],
       ),
@@ -46,10 +45,10 @@ class AppRoutes {
           return PdpPage(args: PdpArgs(productId: productId));
         },
       ),
-      GoRoute(
-        path: cart,
-        builder: (context, state) => const CartPage(),
-      ),
+      // GoRoute(
+      //   path: cart,
+      //   builder: (context, state) => const CartPage(),
+      // ),
     ],
   );
 }

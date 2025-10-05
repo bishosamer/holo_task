@@ -17,8 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<CartBloc>()..add(CartRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<CartBloc>()..add(CartRequested())),
+      ],
       child: MaterialApp.router(
         title: 'Holo Task',
         theme: AppTheme.lightTheme,

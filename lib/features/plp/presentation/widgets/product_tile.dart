@@ -39,7 +39,7 @@ class ProductTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                       child: Image.network(
                         product.image,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) => Container(
                           color: AppColors.grey200,
                           child: const Icon(
