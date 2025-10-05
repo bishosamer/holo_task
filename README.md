@@ -6,7 +6,7 @@ Holo Task is a Flutter application designed to manage a shopping experience. It 
 ## Features
 - **Product Listing**: Users can view a list of products.
 - **Product Details**: Users can tap on a product to view detailed information.
-- **Shopping Cart**: Users can add products to their cart and view the cart contents.
+- **Shopping Cart**: Users can add products to their cart and view the cart contents which persists using local caching.
 - **Dependency Injection**: Utilizes `get_it` for managing dependencies throughout the application.
 - **State Management**: Implements the BLoC pattern to manage application state effectively.
 
